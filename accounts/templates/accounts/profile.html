@@ -1,0 +1,23 @@
+{% extends 'main/base.html' %}
+{% block title %}
+    Profile - CarGear
+{% endblock title %}
+{% block content %}
+    <div class="container d-flex justify-content-center">
+        <div class="card rounded text-dark my-4" style="width: 23rem;">
+            <div class="card-body text-center">
+                <img src="{{ user.profile.profile_pic.url }}" alt="img" class="rounded-circle mt-2" style="width: 100px; height: 90px;">
+                <div>
+                    <h1>{{user.first_name}} {{user.last_name}} </h1>
+                    <p class="card-text"><i class="fas fa-envelope"></i> {{user.email}}</p>
+                    <p class="card-text"><i class="fas fa-user"></i> {{user.username}}</p>
+                    <p class="card-text"><i class="fas fa-map-marker-alt"></i> {{user.profile.city}}</p>
+                </div><br>
+                <div class="card-links mb-3">
+                    <a href="{% url 'update_profile' %}" class="btn btn-dark my-2">Edit Profile</a><br>
+                    <a href="" class="btn btn-dark">Change password</a>
+                </div>
+            </div>
+        </div>
+    </div>
+  {% endblock content %}

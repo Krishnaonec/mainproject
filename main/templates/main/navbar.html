@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">Cargear.com</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'cars_catalog' %}">Book car</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register_car' %}">Rent Your car</a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                {% if request.user.is_authenticated %}
+                <div class="btn-group dropstart">
+                    <a type="button" class="text-light me-3 mt-2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle" style="font-size:24px"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                        <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'my_bookings' %}">My bookings</a></li>
+                        {% if request.user.profile.owns_cars %}
+                        <li><a class="dropdown-item" href="{% url 'owned_cars' %}">My Cars</a></li>
+                        {% endif %}
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <a class="btn btn-sm btn-outline-light mx-2" href=" {% url 'register' %}">Register</a>
+                <a class="btn btn-sm btn-light mx-2" href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

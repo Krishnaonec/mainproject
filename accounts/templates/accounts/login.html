@@ -1,0 +1,21 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Login - CarGear
+{% endblock title %}
+{% block content %}
+<h1 class="text-center mt-3">Login Now</h1>
+<div class="container form-container">
+    <div class="card">
+        <div class="card-body">
+            <form action="" method="post" class="d-flex flex-column justify-content-around">
+                {% csrf_token %}
+                {{ form |crispy}}
+                <input type="submit" value="Login" class="btn btn-primary mt-3 rd-btn">
+            </form>
+            <br>
+            <div class="text-center"><a href="{% url 'register' %}" class="btn btn-sm btn-outline-danger rd-btn">Don't have an account?</a></div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

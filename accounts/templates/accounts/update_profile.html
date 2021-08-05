@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Update Profile - CarGear
+{% endblock title %}
+{% block content %}
+    <div class="container form-container">
+        <div class="card">
+            <h1 class="text-center">Edit Profile</h1>
+            <div class="card-body">
+                <form action="" method="post" enctype="multipart/form-data" class="d-flex flex-column justify-content-between">
+                    {% csrf_token %}
+                    {{ u_form | crispy}}
+                    {{ p_form | crispy }}
+                    <input type="submit" value="Update" class="btn btn-primary mt-3 rd-btn">
+                </form>
+                <br>
+                <div class="text-center"><a href="{% url 'profile' %}" class="btn btn-sm btn-outline-danger rd-btn">Go Back</a></div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

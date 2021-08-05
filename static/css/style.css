@@ -1,0 +1,32 @@
+body{
+    background-color: #212121;
+    color:white;
+}
+.form-container {
+  width: 350px;
+  margin: 30px auto;
+  color:black;
+}
+
+.rd-btn{
+  border-radius: 20px;
+  padding: 10px 15px;
+  font-weight: bold;
+}
+
+.form-text{
+  display: none;
+}
+
+.alert-block{font-weight: bold; }
+
+ul{list-style-type: none; }
+
+.customcard{
+  color: black;
+}
+.card-text{
+  font-weight: bold;
+}
+
+.modal-content{background-color: #212121;}

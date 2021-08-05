@@ -1,0 +1,41 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Register car - CarGear
+{% endblock title %}
+{% block content %}
+<div class="container form-container">
+    <div class="card">
+        <div class="card-body">
+            <form action="" method="post" enctype="multipart/form-data" class="d-flex flex-column justify-content-around">
+                {% csrf_token %}
+                {{ form |crispy}}<br>
+                <input type="submit" value="Register Now" class="btn btn-primary mt-3 rd-btn">
+            </form>
+            <br>
+            <div class="text-center"><a href="{% url 'home' %}" class="btn btn-sm btn-outline-danger rd-btn">Cancel</a></div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+<script>
+    $("#id_carbrand").change(function(){
+        const carbrandId = $(this).val();
+        $.ajax({
+            type : "POST",
+            url  : '{% url "get_carmodels_ajax" %}',
+            data : {
+                'carbrand_id' : carbrandId,
+                'csrfmiddlewaretoken' :$('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function(data){
+                let html_data = '<option value="">--select model--</option>';
+                data.forEach(function (data){
+                    html_data += `<option value="${data.id}">${data.name}</option>`
+                });
+                $("#id_carmodel").html(html_data);
+            }
+        });
+    });
+</script>
+{% endblock content %}

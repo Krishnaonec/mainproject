@@ -1,0 +1,24 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Rate car - CarGear
+{% endblock title %}
+{% block content %}
+<div class="container form-container">
+    <div class="card">
+        <div class="card-body">
+            <div class="text-center">
+                <h5 class="card-text">{{ booking.usercar.carmodel.name}}</h5>
+                <p class="card-text">{{booking.usercar.carbrand.name }}</p>
+            </div> <br>
+            <form action="" method="post" class="d-flex flex-column justify-content-around">
+                {% csrf_token %}
+                {{ form |crispy}}
+                <input type="submit" value="Rate" class="btn btn-primary mt-3 rd-btn">
+            </form>
+            <br>
+            <div class="text-center"><a href="{% url 'cars_catalog' %}" class="btn btn-sm btn-outline-danger rd-btn">Cancel</a></div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
