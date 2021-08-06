@@ -41,7 +41,8 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class ProfileUpdateForm(forms.ModelForm):
-    city = forms.CharField(max_length=100)
+    cities = [('Chennai', 'Chennai'), ('Hyderabad', 'Hyderabad'), ('Bengauluru', 'Bengaluru')]
+    city = forms.ChoiceField(choices= cities, required=False)
     profile_pic = forms.ImageField(
                         widget=forms.FileInput,
                         required=False, 

@@ -8,7 +8,7 @@
         <div class="card">
             <h1 class="text-center">Edit Profile</h1>
             <div class="card-body">
-                <form action="" method="post" enctype="multipart/form-data" class="d-flex flex-column justify-content-between">
+                <form action="" method="post" enctype="multipart/form-data" class="d-flex flex-column justify-content-between" style="height: 500px;">
                     {% csrf_token %}
                     {{ u_form | crispy}}
                     {{ p_form | crispy }}
