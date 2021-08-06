@@ -30,3 +30,9 @@ ul{list-style-type: none; }
 }
 
 .modal-content{background-color: #212121;}
+
+@media only screen and (max-width: 992px){
+  .profile-margin{
+      margin-left: 10rem;
+  }
+}

@@ -21,24 +21,24 @@
                 </li>
             </ul>
             <div class="d-flex">
-                {% if request.user.is_authenticated %}
-                <div class="btn-group dropstart">
-                    <a type="button" class="text-light me-3 mt-2" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user-circle" style="font-size:24px"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark">
-                        <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-                        <li><a class="dropdown-item" href="{% url 'my_bookings' %}">My bookings</a></li>
-                        {% if request.user.profile.owns_cars %}
-                        <li><a class="dropdown-item" href="{% url 'owned_cars' %}">My Cars</a></li>
-                        {% endif %}
-                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                    </ul>
+              {% if request.user.is_authenticated %}
+                <div class="btn-group dropstart profile-margin">
+                  <a type="button" class="text-light me-3 mt-2" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user-circle" style="font-size:24px"></i>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-dark">
+                    <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'my_bookings' %}">My bookings</a></li>
+                    {% if request.user.profile.owns_cars %}
+                      <li><a class="dropdown-item" href="{% url 'owned_cars' %}">My Cars</a></li>
+                    {% endif %}
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                  </ul>
                 </div>
-                {% else %}
+              {% else %}
                 <a class="btn btn-sm btn-outline-light mx-2" href=" {% url 'register' %}">Register</a>
                 <a class="btn btn-sm btn-light mx-2" href="{% url 'login' %}">Login</a>
-                {% endif %}
+              {% endif %}
             </div>
         </div>
     </div>
