@@ -22,9 +22,10 @@
             </ul>
             <div class="d-flex">
               {% if request.user.is_authenticated %}
-                <div class="btn-group profile-margin mt-1">
-                    <a type="button" class="text-light" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user-circle" style="font-size:26px"></i>
+                <div class="btn-group me-5">
+                    <a type="button" class="text-light dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 1rem;">
+                        <!-- <i class="fas fa-user-circle" style="font-size:26px"></i> -->
+                        {{ request.user.first_name }} {{ request.user.last_name}}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark">
                         <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
@@ -32,10 +33,10 @@
                         {% if request.user.profile.owns_cars %}
                           <li><a class="dropdown-item" href="{% url 'owned_cars' %}">My Cars</a></li>
                         {% endif %}
-                        <li><a class="dropdown-item" href="#">Do something</a></li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        
                     </ul>
                 </div>
-                <a class="btn btn-sm btn-success mx-3" href="{% url 'logout' %}">Logout</a>
               {% else %}
                 <a class="btn btn-sm btn-outline-light mx-2" href=" {% url 'register' %}">Register</a>
                 <a class="btn btn-sm btn-light mx-2" href="{% url 'login' %}">Login</a>

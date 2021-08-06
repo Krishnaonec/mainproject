@@ -30,10 +30,3 @@ ul{list-style-type: none; }
 }
 
 .modal-content{background-color: #212121;}
-
-@media screen 
-  and (min-width: 992px){
-      .profile-margin{
-          margin-right: 2rem;
-      }
-}
