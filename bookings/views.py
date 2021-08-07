@@ -9,22 +9,28 @@ from .models import CarBooking
 
 @login_required
 def book_car(request, car_id):
-    usercar = UserCar.objects.get(pk=car_id)
-    if request.method == 'POST':
-        form = CarBookingForm(request.POST)
-        if form.is_valid():
-            booked_user    =  request.user
-            destination    =  form.cleaned_data.get('destination')
-            returning_date =  form.cleaned_data.get('returning_date')
-            CarBooking.objects.create(usercar= usercar, 
-                                          booked_user = booked_user,
-                                          destination = destination,
-                                          returning_date = returning_date)
-            messages.success(request, f"Your booking is successful")
-            return redirect('my_bookings')
+
+    if request.user.carbooking_set.filter(is_returned = False):
+        messages.error(request, f"You've an open booking. Please book after returning the car.")
+        return redirect('my_bookings')
+
     else:
-        form = CarBookingForm()
-    return render(request, 'bookings/book_car.html', {'form': form, 'usercar':usercar})
+        usercar = UserCar.objects.get(pk=car_id)
+        if request.method == 'POST':
+            form = CarBookingForm(request.POST)
+            if form.is_valid():
+                booked_user    =  request.user
+                destination    =  form.cleaned_data.get('destination')
+                returning_date =  form.cleaned_data.get('returning_date')
+                CarBooking.objects.create(usercar= usercar, 
+                                            booked_user = booked_user,
+                                            destination = destination,
+                                            returning_date = returning_date)
+                messages.success(request, f"Your booking is successful")
+                return redirect('my_bookings')
+        else:
+            form = CarBookingForm()
+        return render(request, 'bookings/book_car.html', {'form': form, 'usercar':usercar})
 
 
 @login_required

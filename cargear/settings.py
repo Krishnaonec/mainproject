@@ -13,6 +13,8 @@ import os
 from pathlib import Path
 from decouple import config
 import django_heroku
+from django.contrib.messages import constants as messages
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -154,3 +156,7 @@ else:     #development settings
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), ]
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
