@@ -14,6 +14,13 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ['username','email','first_name','last_name','password1','password2']
 
+    def __init__(self, *args, **kwargs):
+        super(SignUpForm, self).__init__(*args, **kwargs)
+        self.fields['email'].help_text = "Webex email is recommended for car owners"
+        self.fields['username'].help_text = None
+        self.fields['password1'].help_text = None
+        self.fields['password2'].help_text = None
+
     def clean_email(self):
         emails = User.objects.filter(email=self.cleaned_data['email'])
         if emails:

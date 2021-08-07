@@ -7,7 +7,7 @@
     <div class="container form-container">
         <div class="card">
             <div class="card-body">
-                <form action="" method="post" class="d-flex flex-column justify-content-around">
+                <form action="" method="post" class="d-flex flex-column justify-content-around" style="height: 550px;">
                     {% csrf_token %}
                     {{ form |crispy}}
                     <input type="submit" value="Sign Up" class="btn btn-primary mt-3 rd-btn">
