@@ -13,5 +13,8 @@ def update_owner_status(sender, instance, created, *args, **kwargs):
 @receiver(post_delete, sender = UserCar)
 def remove_ownership(sender, instance, *args, **kwargs):
     user = User.objects.filter(username = instance.owner.username).first()
-    user.profile.owns_cars = False
-    user.save()
+    if user.usercar_set.count() == 0:
+        user.profile.owns_cars = False
+        user.save()
+    else:
+        pass 

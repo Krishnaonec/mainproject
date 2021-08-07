@@ -48,10 +48,12 @@ def cars_catalog(request):
 @login_required
 def owned_cars(request):
     owned_cars = UserCar.objects.filter(owner = request.user)
+    print(owned_cars)
     return render(request, 'cars/owned_cars.html', {'owned_cars':owned_cars})
 
 @login_required
 def delete_car(request, car_id):
-    UserCar.objects.get(id= car_id).delete()
+    print(car_id)
+    UserCar.objects.get(id = car_id).delete()
     messages.success(request, "Your car is de-registered")
     return redirect('owned_cars')
