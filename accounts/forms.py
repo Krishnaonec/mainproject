@@ -16,7 +16,7 @@ class SignUpForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
-        self.fields['email'].help_text = "Webex email is recommended for car owners"
+        self.fields['email'].help_text = "Webex email is recommended"
         self.fields['username'].help_text = None
         self.fields['password1'].help_text = None
         self.fields['password2'].help_text = None

@@ -22,7 +22,7 @@
             </ul>
             <div class="d-flex">
               {% if request.user.is_authenticated %}
-                <div class="btn-group me-5">
+                <div class="btn-group" style="margin-right: 5.5rem;">
                     <a type="button" class="text-light dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 1rem;">
                         <!-- <i class="fas fa-user-circle" style="font-size:26px"></i> -->
                         {{ request.user.first_name }} {{ request.user.last_name}}
@@ -30,6 +30,7 @@
                     <ul class="dropdown-menu dropdown-menu-dark">
                         <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
                         <li><a class="dropdown-item" href="{% url 'my_bookings' %}">My bookings</a></li>
+                        <li><a class="dropdown-item" href="{% url 'my_spaces' %}">My Spaces</a></li>
                         {% if request.user.profile.owns_cars %}
                           <li><a class="dropdown-item" href="{% url 'owned_cars' %}">My Cars</a></li>
                         {% endif %}

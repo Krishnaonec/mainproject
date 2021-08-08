@@ -1,0 +1,23 @@
+{% extends 'main/base.html' %}
+{% block title %}
+    Contact Owner - CarGear
+{% endblock title %}
+{% block content %}
+{% include 'webexmint/includes/contact_owner_modals.html' %}
+    <div class="container d-flex justify-content-center">
+        <div class="card rounded text-dark my-4" style="width: 23rem;">
+            <div class="card-body text-center">
+                <img src="{{ owner.profile.profile_pic.url }}" alt="img" class="rounded-circle mt-2" style="width: 100px; height: 90px;">
+                <div>
+                    <h1>{{owner.first_name}} {{owner.last_name}} </h1>
+                    <p class="card-text"><i class="fas fa-envelope"></i> {{owner.email}}</p>
+                    <p class="card-text"><i class="fas fa-owner"></i> {{owner.username}}</p>
+                    <p class="card-text"><i class="fas fa-map-marker-alt"></i> {{owner.profile.city}}</p>
+                </div><br>
+                <div class="card-links mb-3">
+                    <button type="button" class="btn btn-dark mx-2" data-bs-toggle="modal" data-bs-target="#contactOwnerModal">Contact</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  {% endblock content %}

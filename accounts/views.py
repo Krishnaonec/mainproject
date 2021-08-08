@@ -35,7 +35,6 @@ def login_user(request):
                 user = authenticate(username=username, password = password)
                 if user:
                     login(request, user)
-                    print(user.get_username())
                     messages.success(request, f"Welcome back,  {user.first_name.capitalize() +' '+ user.last_name.capitalize()}")
                     return redirect('home')
                 else:

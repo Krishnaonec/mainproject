@@ -23,6 +23,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('cars/', include('cars.urls')),
     path('bookings/', include('bookings.urls')),
+    path('webexmint/', include('webexmint.urls')),
 ]
 
 if settings.DEBUG == True:

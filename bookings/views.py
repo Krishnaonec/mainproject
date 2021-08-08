@@ -79,3 +79,9 @@ def rate_car(request, booking_id):
 def view_car_bookings(request, car_id):
     bookings    = UserCar.objects.get(id = car_id).carbooking_set.all()
     return render(request, 'bookings/view_car_bookings.html', {'usercar_id':car_id, 'bookings': bookings})
+
+
+def contact_owner(request):
+    if request.user.carbooking_set.filter(is_returned = False):
+        messages.error(request, f'You have an open booking. Please make new booking after returning the car')
+    pass

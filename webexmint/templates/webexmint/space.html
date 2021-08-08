@@ -1,0 +1,26 @@
+{% extends 'main/base.html' %}
+{% block external_code %}
+<script src="https://code.s4d.io/widget-space/production/bundle.js"></script>
+<link rel="stylesheet" href="https://code.s4d.io/widget-space/production/main.css">
+{% endblock external_code %}
+{% block title %}
+    Space | CarGear
+{% endblock title %}
+{% block content %}
+        <div id="my-webexteams-widget" style="width: 500px; height: 500px; margin: 3rem auto"/>
+        <script>
+        var widgetEl = document.getElementById('my-webexteams-widget');
+        webex.widget(widgetEl).spaceWidget({
+            accessToken: "{{request.session.access_token}}",
+            destinationId: "{{spaceId}}",
+            destinationType: 'spaceId'
+        });
+        </script>
+        <form action="{% url 'delete_space' %}" method="post" class="my-3">
+            {% csrf_token %}
+            <div class="text-center">
+                <input type="hidden" name="roomId" value="{{spaceId}}">
+                <input type="submit" value="Delete space" class="btn btn-success">
+            </div>
+        </form>
+{% endblock content %}

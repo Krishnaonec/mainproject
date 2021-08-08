@@ -3,50 +3,57 @@
 Book a Car - CarGear
 {% endblock title %}
 {% block content %}
-{% if available_cars %}
-<h3 class="text-center my-2">Cars available in <strong>{{request.user.profile.city}}</strong></h3>
-<div class="container d-flex flex-wrap">
-  {% for car in available_cars %}
+  {% if available_cars %}
+  <h3 class="text-center my-2">Cars available in <strong>{{request.user.profile.city}}</strong></h3>
+  <div class="container d-flex flex-wrap">
+    {% for car in available_cars %}
     {% include 'cars/includes/owner_modals.html' %}
-    <div class="card bg-dark mx-5 my-3" style="width: 20rem;">
-      <img src="{{car.image.url}}" class="card-img-top" alt="{{car.carmodel.name}}" width="300px" height="200px">
-      <div class="card-body">
-        <div>
-          <table>
-            <tr>
-              <td>Model:</td>
-              <td>
-                <p class="card-text"> {{ car.carmodel.name }}</p>
-              </td>
-            </tr>
-            <tr>
-              <td>Brand:</td>
-              <td>
-                <p class="card-text"> {{ car.carbrand.name }}</p>
-              </td>
-            </tr>
-            <tr>
-              <td>Owner:</td>
-              <td>
-                <p class="card-text"> {{ car.owner.first_name }} {{car.owner.last_name}}</p>
-              </td>
-            </tr>
-            <tr>
-              <td>Price:</td>
-              <td>
-                <p class="card-text"> <i class="fas fa-rupee-sign"></i> {{ car.price }} (per day)</p>
-              </td>
-            </tr>
-          </table>
-        </div><br>
-        <a href="{% url 'book_car' car.id %}" class="btn btn-sm btn-primary">Book Now</a>
-        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#ownerModal{{car.owner.id}}">Contact owner</button>
-        <span style="float: right;">{{ car.get_rating }}</span>
+      <div class="card bg-dark mx-5 my-3" style="width: 20rem;">
+        <img src="{{car.image.url}}" class="card-img-top" alt="{{car.carmodel.name}}" width="300px" height="200px">
+        <div class="card-body">
+          <div>
+            <table>
+              <tr>
+                <td>Model:</td>
+                <td>
+                  <p class="card-text"> {{ car.carmodel.name }}</p>
+                </td>
+              </tr>
+              <tr>
+                <td>Brand:</td>
+                <td>
+                  <p class="card-text"> {{ car.carbrand.name }}</p>
+                </td>
+              </tr>
+              <tr>
+                <td>Owner:</td>
+                <td>
+                  <p class="card-text"> {{ car.owner.first_name }} {{car.owner.last_name}}</p>
+                </td>
+              </tr>
+              <tr>
+                <td>Price:</td>
+                <td>
+                  <p class="card-text"> <i class="fas fa-rupee-sign"></i> {{ car.price }} (per day)</p>
+                </td>
+              </tr>
+            </table>
+          </div><br>
+          <a href="{% url 'book_car' car.id %}" class="btn btn-sm btn-primary">Book Now</a>
+
+          {% if 'access_token' in request.session %}
+            <a href="{% url 'contact_owner' car.owner.id%}" class="btn btn-sm btn-primary">Contact Owner</a>
+          {% else %}
+            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+              data-bs-target="#ownerModal{{car.owner.id}}">Contact owner</button>
+          {% endif %}
+          
+          <span style="float: right;">{{ car.get_rating }}</span>
+        </div>
       </div>
+      {% endfor %}
     </div>
-  {% endfor %}
-</div>
-{% else %}
-<h3 class="text-center my-2">No Cars available in <strong>{{request.user.profile.city}}</strong></h3>
-{% endif %}
+  {% else %}
+  <h3 class="text-center my-2">No Cars available in <strong>{{request.user.profile.city}}</strong></h3>
+  {% endif %}
 {% endblock content %}

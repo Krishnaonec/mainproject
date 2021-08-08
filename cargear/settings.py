@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'cars.apps.CarsConfig',
     'bookings.apps.BookingsConfig',
+    'webexmint.apps.WebexmintConfig',
 
     # 3rd party apps
     'storages',
@@ -129,11 +130,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
 
 
 if not DEBUG:  # Production settings
 
     django_heroku.settings(locals(), staticfiles=False)    # Heroku won't work without this line
+    
     # AWS
     AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
@@ -157,6 +162,3 @@ else:     #development settings
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), ]
 
-MESSAGE_TAGS = {
-    messages.ERROR: 'danger',
-}
