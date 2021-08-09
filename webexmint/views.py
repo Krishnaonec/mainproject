@@ -7,25 +7,26 @@ from decouple import config
 from .models import UserOwnerSpace
 
 def oauth(request):
-    if 'code' in request.GET and request.GET.get('state') == config('state'):
-        code = request.GET.get('code')
-        try:
-            api  = WebexTeamsAPI.from_oauth_code(
-                client_id     = config('client_id'),
-                client_secret = config('client_secret'),
-                code          = code,
-                redirect_uri  = config('redirect_uri')
-            )
+    # if 'code' in request.GET and request.GET.get('state') == config('state'):
+    #     code = request.GET.get('code')
+    #     try:
+    #         api  = WebexTeamsAPI.from_oauth_code(
+    #             client_id     = config('CLIENT_ID'),
+    #             client_secret = config('CLIENT_SECRET'),
+    #             code          = code,
+    #             redirect_uri  = config('REDIRECT_URI')
+    #         )
 
-            request.session['access_token'] = api.access_token
-            messages.success(request, f"You webex authentication is successful! Now you can contact onwers.")
-            return redirect('home')
-        except:
-            messages.error(request, f"Something went wrong! Please try again")
-            return redirect('home')
-    else:
-        messages.error(request, f"Something went wrong! Please try again")
-        return redirect('home')
+    #         request.session['access_token'] = api.access_token
+    #         messages.success(request, f"You webex authentication is successful! Now you can contact onwers.")
+    #         return redirect('home')
+    #     except:
+    #         messages.error(request, f"Something went wrong! Please try again")
+    #         return redirect('home')
+    # else:
+    #     messages.error(request, f"Something went wrong! Please try again")
+    #     return redirect('home')
+    pass
 
 
 def contact_owner(request, owner_id):
