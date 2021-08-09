@@ -26,7 +26,7 @@ def register_car(request):
         return render(request, 'cars/register_car.html', {'form' : form})
     
     else:
-        return render(request, 'webexmint/oauth_redirect.html')
+        return render(request, 'webexmint/oauth_grant.html')
 
 #drop-down ajax
 def get_carmodels_ajax(request):
