@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+from typing import cast
 from decouple import config
 import django_heroku
 from django.contrib.messages import constants as messages
@@ -26,7 +27,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', cast = bool)
 
 ALLOWED_HOSTS = ["cargear.herokuapp.com", "127.0.0.1"]
 
@@ -135,8 +135,9 @@ MESSAGE_TAGS = {
 }
 
 
-if not DEBUG:  # Production settings
+if not config('DEV_ENV', cast=bool):  # Production settings
 
+    DEBUG = config('DEBUG', default = False, cast = bool)
     django_heroku.settings(locals(), staticfiles=False)    # Heroku won't work without this line
     
     # AWS
@@ -156,9 +157,5 @@ if not DEBUG:  # Production settings
 
 else:     #development settings
 
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-    MEDIA_URL = '/media/'
-    STATIC_URL = '/static/'
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), ]
+    from .dev_settings import *
 
