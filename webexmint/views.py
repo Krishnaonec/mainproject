@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from webexteamssdk import WebexTeamsAPI
@@ -16,9 +17,9 @@ def oauth(request):
     #     )
 
     # request.session['access_token'] = api.access_token
-    request.session['access_token'] = 'YmI5OTU3OGQtZmRmOC00NTljLWFhY2YtM2RkZjRmMGE3OGE3NGY2NjVkYzEtY2E3_P0A1_72fd5250-f4c5-4261-ba8d-0385199b4781'
+    request.session['access_token'] = 'YTg3YzVkMDAtODA1NC00ZTQ4LTllMzItODM4ZTkzY2FlMzE5MmQ3NWNhMmItYjY0_P0A1_72fd5250-f4c5-4261-ba8d-0385199b4781'
     messages.success(request, f"You webex authentication is successful! Now you can contact onwers.")
-    return redirect('cars_catalog')
+    return redirect('home')
 
 
 def contact_owner(request, owner_id):
@@ -31,6 +32,7 @@ def create_userowner_space(request, owner_id):
 
     # space already exists
     if existing_space:   
+        messages.info(request, f"You already have an open space. Please delete existing space to create new one.")
         return render(request, 'webexmint/space.html', {'spaceId': existing_space.roomId})
 
     # space not exists, create new space
@@ -51,6 +53,7 @@ def create_userowner_space(request, owner_id):
             messages.error(request, f'Something went wrong! Please retry again.')
             return redirect('cars_catalog', )
 
+
 def delete_space(request):
     try:
         roomId = request.POST.get('roomId')
@@ -61,32 +64,29 @@ def delete_space(request):
         return redirect('home')
     except:
         messages.error(request, f"Something went wrong! Please try again.")
-        return redirect('cars_catalog')
+        return redirect('home')
 
 
 def my_spaces(request):
-    try:
-        spaceset = UserOwnerSpace.objects.filter(creator = request.user) | UserOwnerSpace.objects.filter(owner = request.user) 
-        userownerspace = spaceset.first()
-        webex_space = WebexTeamsAPI(access_token= request.session.get('access_token')).rooms.get(roomId= userownerspace.roomId)
-        return render(request, 'webexmint/my_spaces.html',{'webex_space': webex_space, 'created_by' : userownerspace.creator.username})
+    if request.session.get('access_token'):
+        try:
+            spaceset = UserOwnerSpace.objects.filter(creator = request.user) | UserOwnerSpace.objects.filter(owner = request.user) 
+            if spaceset:
+                userownerspace = spaceset.first()
+                webex_space = WebexTeamsAPI(access_token= request.session.get('access_token')).rooms.get(roomId= userownerspace.roomId)
+                return render(request, 'webexmint/my_spaces.html',{'webex_space': webex_space, 'created_by' : userownerspace.creator.username})
+            else:
+                messages.info(request, f"No spaces available")
+                return redirect('home')
+        
+        except:
+            messages.error(request, f'Something went wrong! Please retry again.')
+            return redirect('home')
 
-    except UserOwnerSpace.DoesNotExist:
-        messages.warning(request, f"No spaces available")
-        return redirect('home')
-    
-    except:
-        messages.error(request, f'Something went wrong! Please retry again.')
-        return redirect('home')
+    else:
+        return redirect('oauth')
 
 
 def visit_space(request):
-#     try:
-#         roomId = request.POST.get('roomId')
-#         api = WebexTeamsAPI(access_token = request.session.get('access_token'))
-#         room = api.rooms.get(roomId = roomId)
-#         return render(request, 'webexmint/space.html', {'spaceId' : room.id})
-#     except:
-#         messages.error(request, f"Something went wrong! Please retry again.")
-#         return redirect('home')
-    pass
+    roomId = request.POST.get('roomId')
+    return render(request, 'webexmint/space.html', {'spaceId' : roomId})

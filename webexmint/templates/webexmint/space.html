@@ -7,7 +7,7 @@
     Space | CarGear
 {% endblock title %}
 {% block content %}
-        <div id="my-webexteams-widget" style="width: 500px; height: 500px; margin: 3rem auto"/>
+        <div id="my-webexteams-widget" style="width: 34.5rem; height: 37.5rem; margin: 2rem auto"/>
         <script>
         var widgetEl = document.getElementById('my-webexteams-widget');
         webex.widget(widgetEl).spaceWidget({
@@ -16,7 +16,8 @@
             destinationType: 'spaceId'
         });
         </script>
-        <form action="{% url 'delete_space' %}" method="post" class="my-3">
+        <a href="{% url 'home' %}" class="btn btn-success text-center">Close</a>
+        <form action="{% url 'delete_space' %}" method="post" class="my-4">
             {% csrf_token %}
             <div class="text-center">
                 <input type="hidden" name="roomId" value="{{spaceId}}">
