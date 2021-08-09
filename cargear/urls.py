@@ -28,6 +28,6 @@ urlpatterns = [
     path('webexmint/', include('webexmint.urls')),
 ]
 
-if config('DEV_ENV'):
+if config('DEV_ENV', cast = bool):
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
