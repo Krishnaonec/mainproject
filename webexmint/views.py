@@ -5,27 +5,37 @@ from django.contrib import messages
 from webexteamssdk import WebexTeamsAPI
 from decouple import config
 from .models import UserOwnerSpace
+from accounts.models import Profile
 
 def oauth(request):
-    # if 'code' in request.GET and request.GET.get('state') == config('state'):
-    #     code = request.GET.get('code')
-    #     try:
-    #         api  = WebexTeamsAPI.from_oauth_code(
-    #             client_id     = config('CLIENT_ID'),
-    #             client_secret = config('CLIENT_SECRET'),
-    #             code          = code,
-    #             redirect_uri  = config('REDIRECT_URI')
-    #         )
+    if 'code' in request.GET and request.GET.get('state') == config('state'):
+        code = request.GET.get('code')
+        try:
+            api  = WebexTeamsAPI.from_oauth_code(
+                client_id     = config('CLIENT_ID'),
+                client_secret = config('CLIENT_SECRET'),
+                code          = code,
+                redirect_uri  = config('REDIRECT_URI')
+            )
 
-    #         request.session['access_token'] = api.access_token
-    #         messages.success(request, f"You webex authentication is successful! Now you can contact onwers.")
-    #         return redirect('home')
-    #     except:
-    #         messages.error(request, f"Something went wrong! Please try again")
-    #         return redirect('home')
-    # else:
-    #     messages.error(request, f"Something went wrong! Please try again")
-    #     return redirect('home')
+            request.session['access_token'] = api.access_token
+            current_user = Profile.objects.filter(user = request.user).first()
+            current_user_webex_emails = api.people.me().emails
+
+            if current_user_webex_emails:
+                current_user.webex_email = current_user_webex_emails[0]
+                current_user.save()
+
+            messages.success(request, f"You Webex authentication is successful! Webex magic unlocked :)")
+            return redirect('home')
+
+        except:
+            messages.error(request, f"Something went wrong! Please try again")
+            return redirect('home')
+            
+    else:
+        messages.error(request, f"Something went wrong! Please try again")
+        return redirect('home')
     pass
 
 
@@ -47,15 +57,16 @@ def create_userowner_space(request, owner_id):
         try:         
             owner= User.objects.get(id = owner_id)
             owner_username = owner.username
-            owner_email = owner.email
+            owner_webex_email = owner.webex_email
             space_title = f"{request.user.username} - {owner_username} (CarGear space)"
             api = WebexTeamsAPI(access_token= request.session.get('access_token'))
             space = api.rooms.create(title= space_title)
             UserOwnerSpace.objects.create(creator = request.user, title = space_title, roomId = space.id, owner = owner)
-            api.memberships.create(roomId= space.id, personEmail= owner_email)
+            api.memberships.create(roomId= space.id, personEmail= owner_webex_email)
             api.messages.create(roomId = space.id, text=f"Hello {owner.first_name + owner.last_name}")
             messages.success(request, f"{space_title} space is created. Enjoy the interaction.")
             return render(request, 'webexmint/space.html', {'spaceId': space.id})
+
         except:
             messages.error(request, f'Something went wrong! Please retry again.')
             return redirect('cars_catalog', )
