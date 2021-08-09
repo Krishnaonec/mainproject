@@ -7,22 +7,26 @@ from cars.models import CarBrand, CarModel, UserCar
 
 @login_required
 def register_car(request):
-    if request.method == 'POST':
-        form = RegisterCarForm(request.POST, request.FILES)
-        if form.is_valid():
-            carbrand = form.cleaned_data['carbrand']
-            carmodel = form.cleaned_data['carmodel']
-            owner    = request.user
-            price    = form.cleaned_data['price']
-            image    = form.cleaned_data['image']
-            UserCar.objects.create(carbrand = carbrand, carmodel = carmodel, owner = owner, price = price, image = image)
-            messages.success(request, f'Your car has been registered!')
-            return redirect('owned_cars')
-    else:
-        form = RegisterCarForm()
+    # if user has webex_email in his Profile 
+    if request.user.profile.webex_email:
+        if request.method == 'POST':
+            form = RegisterCarForm(request.POST, request.FILES)
+            if form.is_valid():
+                carbrand = form.cleaned_data['carbrand']
+                carmodel = form.cleaned_data['carmodel']
+                owner    = request.user
+                price    = form.cleaned_data['price']
+                image    = form.cleaned_data['image']
+                UserCar.objects.create(carbrand = carbrand, carmodel = carmodel, owner = owner, price = price, image = image)
+                messages.success(request, f'Your car has been registered!')
+                return redirect('owned_cars')
+        else:
+            form = RegisterCarForm()
+        
+        return render(request, 'cars/register_car.html', {'form' : form})
     
-    return render(request, 'cars/register_car.html', {'form' : form})
-
+    else:
+        return render(request, 'webexmint/oauth_redirect.html')
 
 #drop-down ajax
 def get_carmodels_ajax(request):

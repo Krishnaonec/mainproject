@@ -1,0 +1,15 @@
+{% extends 'main/base.html' %}
+{% block title %}
+OAuth - CarGear
+{% endblock title %}
+
+{% block content %}
+<div class="container text-center">
+    <p class="h2">We need to authenticate you through Webex to allow you further access</p>
+    <a class="btn btn btn-light my-2"
+        href="https://webexapis.com/v1/authorize?client_id=Ce13a4ec2185df83a045fbe35ef7be51d5f93978d08569289c1d7c1d9eabfbc1e&response_type=code&redirect_uri=https%3A%2F%2Fwww.cargear.herokuapp.com%2Fwebexmint%2Foauth%2F&scope=spark%3Aall%20spark%3Akms&state=cargear"
+        >Proceed</a>
+    <a href="https://cart.webex.com/sign-up" class="btn btn-sm btn-link my-2">Don't have Webex account?</a>
+
+</div>
+{% endblock content %}

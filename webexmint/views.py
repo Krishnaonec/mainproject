@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.http.response import HttpResponse
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from webexteamssdk import WebexTeamsAPI
@@ -7,6 +7,7 @@ from decouple import config
 from .models import UserOwnerSpace
 from accounts.models import Profile
 
+@login_required
 def oauth(request):
     if 'code' in request.GET and request.GET.get('state') == config('state'):
         code = request.GET.get('code')
@@ -36,14 +37,16 @@ def oauth(request):
     else:
         messages.error(request, f"Something went wrong! Please try again")
         return redirect('home')
-    pass
+    
 
 
+@login_required
 def contact_owner(request, owner_id):
     owner = User.objects.get(id = owner_id)
     return render(request, 'webexmint/contact_owner.html',{'owner':owner})
 
 
+@login_required
 def create_userowner_space(request, owner_id):
     existing_space = UserOwnerSpace.objects.filter(creator_id = request.user.id).first()
 
@@ -72,6 +75,7 @@ def create_userowner_space(request, owner_id):
             return redirect('cars_catalog', )
 
 
+@login_required
 def delete_space(request):
     try:
         roomId = request.POST.get('roomId')
@@ -85,6 +89,7 @@ def delete_space(request):
         return redirect('home')
 
 
+@login_required
 def my_spaces(request):
     if request.session.get('access_token'):
         try:
@@ -105,6 +110,7 @@ def my_spaces(request):
         return redirect('oauth')
 
 
+@login_required
 def visit_space(request):
     roomId = request.POST.get('roomId')
     return render(request, 'webexmint/space.html', {'spaceId' : roomId})
