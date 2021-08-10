@@ -1,3 +1,4 @@
+from decouple import config
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -26,7 +27,7 @@ def register_car(request):
         return render(request, 'cars/register_car.html', {'form' : form})
     
     else:
-        return render(request, 'webexmint/oauth_grant.html')
+        return render(request, 'webexmint/oauth_grant.html', {'WEBEX_AUTH_LINK': config('WEBEX_AUTH_LINK')})
 
 #drop-down ajax
 def get_carmodels_ajax(request):
@@ -46,7 +47,8 @@ def get_carmodels_ajax(request):
 @login_required
 def cars_catalog(request):
     available_cars = UserCar.objects.filter(is_available = True).exclude(owner_id = request.user.id).filter(owner__profile__city__iexact = request.user.profile.city)
-    return render(request, 'cars/cars_catalog.html', {'available_cars': available_cars})
+    context = {'available_cars': available_cars, 'WEBEX_AUTH_LINK': config('WEBEX_AUTH_LINK')}
+    return render(request, 'cars/cars_catalog.html', context= context)
 
 
 @login_required
