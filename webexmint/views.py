@@ -18,20 +18,18 @@ def oauth(request):
                 code          = code,
                 redirect_uri  = config('REDIRECT_URI')
             )
-
             request.session['access_token'] = api.access_token
-            current_user = Profile.objects.filter(user = request.user).first()
             current_user_webex_emails = api.people.me().emails
 
-            if current_user_webex_emails:
-                current_user.webex_email = current_user_webex_emails[0]
-                current_user.save()
+            if current_user_webex_emails and request.user.profile.webex_email not in current_user_webex_emails:
+                    request.user.profile.webex_email = current_user_webex_emails[0]
+                    request.user.save()
 
-            messages.success(request, f"You Webex authentication is successful! Webex magic unlocked :)")
+            messages.success(request, f"You Webex authentication is successful!")
             return redirect('home')
 
         except:
-            messages.error(request, f"Something went wrong! Please try again")
+            messages.error(request, f"Bad response from Webex! Please try again")
             return redirect('home')
             
     else:
@@ -43,7 +41,7 @@ def oauth(request):
 @login_required
 def contact_owner(request, owner_id):
     owner = User.objects.get(id = owner_id)
-    return render(request, 'webexmint/contact_owner.html',{'owner':owner})
+    return render(request, 'webexmint/contact_owner.html', {'owner':owner})
 
 
 @login_required
