@@ -12,20 +12,22 @@ def oauth(request):
     if 'code' in request.GET and request.GET.get('state') == config('state'):
         code = request.GET.get('code')
         try:
-            api  = WebexTeamsAPI.from_oauth_code(
+            api = WebexTeamsAPI(
                 client_id     = config('CLIENT_ID'),
                 client_secret = config('CLIENT_SECRET'),
-                code          = code,
+                oauth_code    = code, 
                 redirect_uri  = config('REDIRECT_URI')
             )
-            request.session['access_token'] = api.access_token
+            
+            request.user.usertoken.access_token = api.access_token
             current_user_webex_emails = api.people.me().emails
 
             if current_user_webex_emails and request.user.profile.webex_email not in current_user_webex_emails:
                     request.user.profile.webex_email = current_user_webex_emails[0]
-                    request.user.save()
 
-            messages.success(request, f"You Webex authentication is successful!")
+            request.user.save()
+
+            messages.success(request, f"Authentication successful! Webex magic unlocked :)")
             return redirect('home')
 
         except:
@@ -60,7 +62,7 @@ def create_userowner_space(request, owner_id):
             owner_username = owner.username
             owner_webex_email = owner.webex_email
             space_title = f"{request.user.username} - {owner_username} (CarGear space)"
-            api = WebexTeamsAPI(access_token= request.session.get('access_token'))
+            api = WebexTeamsAPI(access_token= request.user.usertoken.access_token)
             space = api.rooms.create(title= space_title)
             UserOwnerSpace.objects.create(creator = request.user, title = space_title, roomId = space.id, owner = owner)
             api.memberships.create(roomId= space.id, personEmail= owner_webex_email)
@@ -77,7 +79,7 @@ def create_userowner_space(request, owner_id):
 def delete_space(request):
     try:
         roomId = request.POST.get('roomId')
-        api = WebexTeamsAPI(access_token= request.session.get('access_token'))
+        api = WebexTeamsAPI(access_token= request.user.usertoken.access_token)
         api.rooms.delete(roomId= roomId)
         messages.success(request, f"We have deleted the space as you said :)")
         UserOwnerSpace.objects.get(roomId = roomId).delete()
@@ -94,7 +96,7 @@ def my_spaces(request):
             spaceset = UserOwnerSpace.objects.filter(creator = request.user) | UserOwnerSpace.objects.filter(owner = request.user) 
             if spaceset:
                 userownerspace = spaceset.first()
-                webex_space = WebexTeamsAPI(access_token= request.session.get('access_token')).rooms.get(roomId= userownerspace.roomId)
+                webex_space = WebexTeamsAPI(access_token= request.user.usertoken.access_token).rooms.get(roomId= userownerspace.roomId)
                 return render(request, 'webexmint/my_spaces.html',{'webex_space': webex_space, 'created_by' : userownerspace.creator.username})
             else:
                 messages.info(request, f"No spaces available")
