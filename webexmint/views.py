@@ -5,11 +5,11 @@ from django.contrib import messages
 from webexteamssdk import WebexTeamsAPI
 from decouple import config
 from .models import UserOwnerSpace
-from accounts.models import Profile
+
 
 @login_required
 def oauth(request):
-    if 'code' in request.GET and request.GET.get('state') == config('state'):
+    if 'code' in request.GET and request.GET.get('state') == config('STATE'):
         code = request.GET.get('code')
         try:
             api = WebexTeamsAPI(
@@ -20,12 +20,13 @@ def oauth(request):
             )
             
             request.user.usertoken.access_token = api.access_token
+            request.user.usertoken.save()
+
             current_user_webex_emails = api.people.me().emails
 
             if current_user_webex_emails and request.user.profile.webex_email not in current_user_webex_emails:
-                    request.user.profile.webex_email = current_user_webex_emails[0]
-
-            request.user.save()
+                request.user.profile.webex_email = current_user_webex_emails[0]
+                request.user.profile.save()
 
             messages.success(request, f"Authentication successful! Webex magic unlocked :)")
             return redirect('home')
@@ -60,7 +61,7 @@ def create_userowner_space(request, owner_id):
         try:         
             owner= User.objects.get(id = owner_id)
             owner_username = owner.username
-            owner_webex_email = owner.webex_email
+            owner_webex_email = owner.profile.webex_email
             space_title = f"{request.user.username} - {owner_username} (CarGear space)"
             api = WebexTeamsAPI(access_token= request.user.usertoken.access_token)
             space = api.rooms.create(title= space_title)
@@ -68,6 +69,7 @@ def create_userowner_space(request, owner_id):
             api.memberships.create(roomId= space.id, personEmail= owner_webex_email)
             api.messages.create(roomId = space.id, text=f"Hello {owner.first_name + owner.last_name}")
             messages.success(request, f"{space_title} space is created. Enjoy the interaction.")
+            print(space.id)
             return render(request, 'webexmint/space.html', {'spaceId': space.id})
 
         except:
@@ -91,7 +93,7 @@ def delete_space(request):
 
 @login_required
 def my_spaces(request):
-    if request.session.get('access_token'):
+    if request.user.usertoken.access_token:
         try:
             spaceset = UserOwnerSpace.objects.filter(creator = request.user) | UserOwnerSpace.objects.filter(owner = request.user) 
             if spaceset:
