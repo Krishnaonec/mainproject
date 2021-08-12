@@ -41,7 +41,7 @@ Book a Car - CarGear
           </div><br>
           <a href="{% url 'book_car' car.id %}" class="btn btn-sm btn-primary">Book Now</a>
 
-          {% if 'access_token' in request.session %}
+          {% if request.user.usertoken.access_token %}
             <a href="{% url 'contact_owner' car.owner.id%}" class="btn btn-sm btn-primary">Contact Owner</a>
           {% else %}
             <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"

@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import SignUpForm, LoginForm, UserUpdateForm, ProfileUpdateForm
+from webexmint.models import UserToken
 
 def register_user(request):
     context = {}
@@ -47,6 +48,9 @@ def login_user(request):
 
 @login_required
 def logout_user(request):
+    usertoken = UserToken.objects.filter(user = request.user).first()
+    usertoken.access_token = None
+    usertoken.save()
     logout(request)
     return redirect('home')
 
