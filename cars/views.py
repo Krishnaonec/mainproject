@@ -9,7 +9,7 @@ from cars.models import CarBrand, CarModel, UserCar
 @login_required
 def register_car(request):
     # if user has webex_email in his Profile 
-    if request.user.profile.webex_email:
+    if request.user.webex.webex_email:
         if request.method == 'POST':
             form = RegisterCarForm(request.POST, request.FILES)
             if form.is_valid():

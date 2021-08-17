@@ -9,6 +9,14 @@ class UserOwnerSpace(models.Model):
     def __str__(self):
         return self.title
 
-class UserToken(models.Model):
+# class UserToken(models.Model):
+#     user = models.OneToOneField(User, on_delete= models.CASCADE)
+#     access_token = models.TextField(null= True, default= None)
+
+
+
+class Webex(models.Model):
     user = models.OneToOneField(User, on_delete= models.CASCADE)
-    access_token = models.TextField(null= True, default= None)
+    webex_email = models.EmailField(null = True, default = None)
+    webex_id = models.TextField(null = True, default = None)
+    access_token = models.TextField(null = True, default= None)

@@ -19,15 +19,24 @@ def oauth(request):
                 redirect_uri  = config('REDIRECT_URI')
             )
             
-            request.user.usertoken.access_token = api.access_token
-            request.user.usertoken.save()
+            request.user.webex.save()
 
-            current_user_webex_emails = api.people.me().emails
+            user_webex_details = api.people.me()
 
-            if current_user_webex_emails and request.user.profile.webex_email not in current_user_webex_emails:
-                request.user.profile.webex_email = current_user_webex_emails[0]
-                request.user.profile.save()
+            if request.user.webex.webex_id :
+                
+                if request.user.webex.webex_id != user_webex_details.id:
+                    return render(request, 'invalid_details.html')
+                else:
+                    request.user.webex.access_token = api.access_token
+                    request.user.webex.save()
 
+            else:
+                request.user.webex.webex_id = user_webex_details.id
+                request.user.webex.access_token = api.access_token
+                request.user.webex.webex_email = user_webex_details.emails[0]
+                request.user.webex.save()
+            
             messages.success(request, f"Authentication successful! Webex magic unlocked :)")
             return redirect('home')
 
