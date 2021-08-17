@@ -11,7 +11,7 @@
         <script>
         var widgetEl = document.getElementById('my-webexteams-widget');
         webex.widget(widgetEl).spaceWidget({
-            accessToken: "{{request.user.usertoken.access_token}}",
+            accessToken: "{{request.user.webex.access_token}}",
             destinationId: "{{spaceId}}",
             destinationType: 'spaceId'
         });

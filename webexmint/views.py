@@ -70,13 +70,13 @@ def create_userowner_space(request, owner_id):
         try:         
             owner= User.objects.get(id = owner_id)
             owner_username = owner.username
-            owner_webex_email = owner.profile.webex_email
+            owner_webex_email = owner.webex.webex_email
             space_title = f"{request.user.username} - {owner_username} (CarGear space)"
-            api = WebexTeamsAPI(access_token= request.user.usertoken.access_token)
+            api = WebexTeamsAPI(access_token= request.user.webex.access_token)
             space = api.rooms.create(title= space_title)
             UserOwnerSpace.objects.create(creator = request.user, title = space_title, roomId = space.id, owner = owner)
             api.memberships.create(roomId= space.id, personEmail= owner_webex_email)
-            api.messages.create(roomId = space.id, text=f"Hello {owner.first_name + owner.last_name}")
+            api.messages.create(roomId = space.id, text=f"Hello {owner.first_name + ' '+ owner.last_name}")
             messages.success(request, f"{space_title} space is created. Enjoy the interaction.")
             print(space.id)
             return render(request, 'webexmint/space.html', {'spaceId': space.id})
@@ -90,7 +90,7 @@ def create_userowner_space(request, owner_id):
 def delete_space(request):
     try:
         roomId = request.POST.get('roomId')
-        api = WebexTeamsAPI(access_token= request.user.usertoken.access_token)
+        api = WebexTeamsAPI(access_token= request.user.webex.access_token)
         api.rooms.delete(roomId= roomId)
         messages.success(request, f"We have deleted the space as you said :)")
         UserOwnerSpace.objects.get(roomId = roomId).delete()
@@ -102,12 +102,12 @@ def delete_space(request):
 
 @login_required
 def my_spaces(request):
-    if request.user.usertoken.access_token:
+    if request.user.webex.access_token:
         try:
             spaceset = UserOwnerSpace.objects.filter(creator = request.user) | UserOwnerSpace.objects.filter(owner = request.user) 
             if spaceset:
                 userownerspace = spaceset.first()
-                webex_space = WebexTeamsAPI(access_token= request.user.usertoken.access_token).rooms.get(roomId= userownerspace.roomId)
+                webex_space = WebexTeamsAPI(access_token= request.user.webex.access_token).rooms.get(roomId= userownerspace.roomId)
                 return render(request, 'webexmint/my_spaces.html',{'webex_space': webex_space, 'created_by' : userownerspace.creator.username})
             else:
                 messages.info(request, f"No spaces available")
