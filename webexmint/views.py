@@ -19,8 +19,6 @@ def oauth(request):
                 redirect_uri  = config('REDIRECT_URI')
             )
             
-            request.user.webex.save()
-
             user_webex_details = api.people.me()
 
             if request.user.webex.webex_id :
