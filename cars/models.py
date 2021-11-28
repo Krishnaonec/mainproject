@@ -43,7 +43,7 @@ class UserCar(models.Model):
     def get_rating(self):
         total_ratings = self.carbooking_set.count()
         if total_ratings:
-            avg_rating = self.carbooking_set.aggregate(Avg('user_rating'))
+            avg_rating = round(self.carbooking_set.aggregate(Avg('user_rating')), 1)
             return f"{(avg_rating['user_rating__avg'])}/5"
         else:
             return "No ratings"
